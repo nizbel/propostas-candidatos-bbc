@@ -64,7 +64,9 @@ class Command(BaseCommand):
                             candidato_atual = Candidato.objects.get(nome=nome_candidato)
                             propostas = re.findall('<li>(.*?)</li>', candidato, re.DOTALL)
                             for proposta in propostas:
-                                proposta = proposta.strip()
+                                proposta = proposta.strip().replace('&quot;', '"')
+                                if proposta == 'Sem dados até o momento':
+                                    continue
 #                                 print proposta
                                 if not Proposta.objects.filter(texto=proposta, candidato=candidato_atual).exists():
                                     Proposta.objects.create(texto=proposta, candidato=candidato_atual, area=area_atual)

@@ -8,7 +8,6 @@ presidenciaveisApp.controller('PresidenciaveisController', function Presidenciav
        for (var i = 0; i < $scope.propostas.length; i++) {
          $scope.propostas[i].selecionado = 'neutro';
        }
-       console.log($scope.propostas);
     });
 });
 
