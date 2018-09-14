@@ -24,21 +24,25 @@
 		{% verbatim %}
 		<h3>As propostas mostradas aqui foram retiradas da <a href="https://www.bbc.com/portuguese/brasil-45215784">página da BBC</a>.</h3>
 		
-		<div ng-repeat="proposta in propostas" class="input-group">
-		  <input type="text" ng-disabled="true" class="form-control" value="{{proposta.texto}}">
-		  
-		  <div class="input-group-append">
-		    <div class="input-group-text">
-		      <input type="radio" name="proposta-1">
-		    </div>
-		    <div class="input-group-text">
-		      <input type="radio" name="proposta-1">
-		    </div>
-		    <div class="input-group-text">
-		      <input type="radio" name="proposta-1">
-		    </div>
-		  </div>
-		</div>
+		<table>
+			<header>
+				<tr>
+					<th width="80%">Proposta</th>
+					<th style="text-align:center">Contra</th>
+					<th style="text-align:center">Neutro</th>
+					<th style="text-align:center">A favor</th>
+				</tr>
+			</header>
+			
+			<body>
+				<tr ng-repeat="proposta in propostas">
+					<td>{{proposta.texto}}</td>
+					<td align="center"><input type="radio" ng-model="proposta.selecionado" value="contra"></td>
+					<td align="center"><input type="radio" ng-model="proposta.selecionado" value="neutro"></td>
+					<td align="center"><input type="radio" ng-model="proposta.selecionado" value="favor"></td>
+				</tr>
+			</body>
+		</table>
 		{% endverbatim %}
 		
 		
