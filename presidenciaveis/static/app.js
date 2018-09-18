@@ -6,7 +6,12 @@ presidenciaveisApp.config(['$compileProvider', function( $compileProvider )
     }
 ]);
 
-presidenciaveisApp.controller('PresidenciaveisController', function PresidenciaveisController($scope, $http) {
+presidenciaveisApp.config(['$httpProvider', function($httpProvider) {
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+}]);
+
+presidenciaveisApp.controller('PresidenciaveisController', ['$scope', '$http', function($scope, $http) {
 	$scope.bloquear = false;
 	
 	$scope.init = function() {
@@ -70,7 +75,8 @@ presidenciaveisApp.controller('PresidenciaveisController', function Presidenciav
 				    labels: $scope.candidatosVisualizar,
 				    datasets: [{
 				        data: $scope.notas,
-				        label: 'Concordância'
+				        label: 'Concordância',
+				        backgroundColor: 'rgba(0,123,255, 0.2)'
 				    }]
 				},
 				options: {}
@@ -127,27 +133,35 @@ presidenciaveisApp.controller('PresidenciaveisController', function Presidenciav
     }
     
     $scope.verCandidatos = function() {
-    	$http.get("/listar-candidatos").then(function(response) {
-    		var candidatos = response.data;
-    		
-    		for (var i = 0; i < $scope.candidatos.length; i++) {
-    			for (var j = 0; j < candidatos.length; j++) {
-	    			if ($scope.candidatos[i] == candidatos[j].id) {
-	    				$scope.candidatosVisualizar[i] = candidatos[j].nome;
-	    			}
-    			}
-    		}
-    		
-			addData($scope.radar, montarData());
-			
-			$scope.bloquear = true;
-			
-			for (var i = 0; i < $scope.propostas.length; i++) {
-				for (var j = 0; j < candidatos.length; j++) {
-	    			if ($scope.propostas[i].candidato == candidatos[j].id) {
-	    				$scope.propostas[i].nomeCandidato = candidatos[j].nome;
-	    			}
-    			}
+    	var propostas = $scope.csv.split(',')[1];
+    	
+    	$http.post("/enviar-avaliacoes", propostas, {headers:{'Content-Type': 'application/json'}}).then(function(response) {
+    		if (response.data.sucesso) {
+	    		$http.get("/listar-candidatos").then(function(response) {
+		    		var candidatos = response.data;
+		    		
+		    		for (var i = 0; i < $scope.candidatos.length; i++) {
+		    			for (var j = 0; j < candidatos.length; j++) {
+			    			if ($scope.candidatos[i] == candidatos[j].id) {
+			    				$scope.candidatosVisualizar[i] = candidatos[j].nome;
+			    			}
+		    			}
+		    		}
+		    		
+					addData($scope.radar, montarData());
+					
+					$scope.bloquear = true;
+					
+					for (var i = 0; i < $scope.propostas.length; i++) {
+						for (var j = 0; j < candidatos.length; j++) {
+			    			if ($scope.propostas[i].candidato == candidatos[j].id) {
+			    				$scope.propostas[i].nomeCandidato = candidatos[j].nome;
+			    			}
+		    			}
+					}
+				});
+			} else {
+				alert('Houve um erro ao carregar os candidatos');
 			}
 		});
     }
@@ -173,13 +187,55 @@ presidenciaveisApp.controller('PresidenciaveisController', function Presidenciav
         $scope.csv = data;
     }
     
-    $scope.teste = function() {
-    	for (var i = 0; i < $scope.propostas.length; i++) {
-    		$scope.propostas[i].selecionado = 'favor';
-    		$scope.alterarPosicionamento($scope.propostas[i], 'neutro');
-    	}
-    	$scope.verCandidatos();
-    }
+    $scope.upload = function() {
+	    var f = document.getElementById('file-upload').files[0],
+	        r = new FileReader();
+	
+		if (f == null) {
+			alert('Escolha um documento válido');
+			return;
+		}
+	    r.onloadend = function(e) {
+	      	var data = e.target.result;
+	      	
+	      	var validador = new RegExp(/^[-\d:;]+$/g);
+	      	
+	      	if (!validador.test(data)) {
+				alert('Escolha um documento válido');
+				return;
+	      	}
+	      	
+			var propostas = data.split(';');
+			for (var i = 0; i < propostas.length; i++) {
+				var proposta = propostas[i].split(':')[0];
+				var concordancia = propostas[i].split(':')[1];
+				
+				for (var j = 0; j < $scope.propostas.length; j++) {
+					if (proposta == $scope.propostas[j].id) {
+						var selecaoAnterior = $scope.propostas[j];
+						if (concordancia == '-1') {
+							$scope.propostas[j].selecionado = 'contra';
+						} else if (concordancia == '0') {
+							$scope.propostas[j].selecionado = 'neutro';
+						} else if (concordancia == '1') {
+							$scope.propostas[j].selecionado = 'favor';
+						}
+						if (selecaoAnterior != $scope.propostas[j].selecionado) {
+							$scope.alterarPosicionamento($scope.propostas[j], selecaoAnterior);
+						}
+						break;
+					}
+				}
+			}
+			$scope.$apply();
+			
+			document.getElementById('file-upload').value = '';
+			
+			alert('Arquivo carregado com sucesso!');
+	    }
+	
+	    r.readAsBinaryString(f);
+	}
     
     function montarData() {
     	var notas = [];
@@ -211,5 +267,5 @@ presidenciaveisApp.controller('PresidenciaveisController', function Presidenciav
 	        array[j] = temp;
 	    }
 	}
-});
+}]);
 

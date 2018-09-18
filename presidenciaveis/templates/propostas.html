@@ -7,7 +7,7 @@
         </title>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        {% if pagina_descricao %}<meta content="{{pagina_descricao}}" name="description" />{% endif %}
+        <meta content="Página para avaliar as propostas dos candidatos a presidente para o Brasil em 2018" name="description" />
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="Guilherme Henrique Gimenes de Deus" name="author" />
         <meta name="format-detection" content="telephone=no">
@@ -18,10 +18,23 @@
 		
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    
+    	<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-7792152-6"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+		
+		  gtag('config', 'UA-7792152-6');
+		</script>
+		    	
     </head>
 
 	<body ng-controller="PresidenciaveisController" ng-init="init()">
 		{% verbatim %}
+		
 		<div class="row justify-content-center mt-3">
 			<h1>Bem-vindo ao Propostas para o Brasil 2018!</h1>
 		</div>
@@ -71,9 +84,20 @@
 				</div>	
 			
 				<div class="row justify-content-center mt-5">
-					<input type="file" file-model="myFile"/>
-					<a type="button" class="btn btn-primary mr-3" target="_blank" download="propostas.csv" href="{{csv}}">Baixar situação</a>
-					<button type="button" class="btn btn-primary" ng-click="verCandidatos()">Finalizar</button>
+					<a type="button" class="btn btn-primary mr-3" data-toggle="modal" href="#exampleModal" role="button" 
+					 aria-expanded="false" aria-controls="exampleModal">
+				    	<i class="fas fa-info-circle"></i> Como funciona
+				  	</a>
+					<a type="button" class="btn btn-primary mr-3" target="_blank" download="propostas.csv" href="{{csv}}">
+						<i class="fas fa-file-download"></i> Baixar situação
+					</a>
+					<input id="file-upload" type="file" name="file" ng-disabled="bloquear"/>
+					<button type="button" class="btn btn-primary mr-3" ng-click="upload()" ng-disabled="bloquear">
+						<i class="fas fa-file-upload"></i> Carregar situação
+					</button>
+					<button type="button" class="btn btn-primary" ng-click="verCandidatos()" ng-disabled="bloquear">
+						<i class="fas fa-check"></i> Finalizar
+					</button>
 				</div>
 			</div>
 			
@@ -87,10 +111,11 @@
 				<h4>As propostas mostradas aqui foram retiradas da <a href="https://www.bbc.com/portuguese/brasil-45215784">página da BBC</a>.</h4>
 			</div>
 		</div>
+		
 		<div class="row justify-content-center">
-			<a data-toggle="modal" href="#exampleModal" role="button" aria-expanded="false" aria-controls="exampleModal">
-		    	Mais informações
-		  	</a>
+			<a title="Compartilhar no Facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3A//propostasbrasil2018.com.br"><i class="fab fa-facebook-square fa-2x mr-3"></i></a>
+			<a title="Compartilhar no Twitter" href="https://twitter.com/home?status=Analise%20voc%C3%AA%20tamb%C3%A9m%20as%20propostas%20dos%20presidenci%C3%A1veis%202018!%20http%3A//propostasbrasil2018.com.br"><i class="fab fa-twitter-square fa-2x mr-3"></i></a>
+			<a title="Compartilhar no Google Plus" href="https://plus.google.com/share?url=http%3A//propostasbrasil2018.com.br"><i class="fab fa-google-plus-square fa-2x"></i></a>
 		</div>
 		
 		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -117,6 +142,12 @@
 					 		a proposta, a pontuação é diminuída. Como a quantidade de propostas por área varia para cada presidenciável,
 					 		é feita uma normalização, de forma que para cada área é possível ir de -100 a 100.
 					 	</p>
+					 	<p>
+					 		Ao clicar em <strong>Finalizar</strong>, você pode ver seu grau de concordância com cada candidato e não pode mais alterar o
+					 		formulário. É possível também baixar um arquivo com a sua situação atual para cada proposta clicando em 
+					 		<strong>Baixar situação</strong>, que pode ser carregado posteriormente 
+					 		com o botão <strong>Carregar situação</strong> (afinal são mais de 400 propostas para avaliar, não é um processo rápido).
+					 	</p>
 					 	<div class="alert alert-primary mt-3">
 						 	<p>
 						 		Em <strong>15/09/2018</strong> ainda não havia sido cadastrada na 
@@ -138,7 +169,7 @@
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js" type="text/javascript"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.17/angular-filter.min.js" type="text/javascript"></script>
-		<script src={% static "app.js" %} type="text/javascript"></script>
+		<script src={% static "app.min.js" %} type="text/javascript"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js" type="text/javascript"></script>
 	</body>
 	

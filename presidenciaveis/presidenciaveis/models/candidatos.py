@@ -23,3 +23,8 @@ class Area(models.Model):
     
     class Meta:
         unique_together=('nome',)
+        
+class Concordancia(models.Model):
+    data_hora = models.DateTimeField(u'Data')
+    proposta = models.ForeignKey('Proposta')
+    nivel = models.SmallIntegerField(u'Nível de concordância')

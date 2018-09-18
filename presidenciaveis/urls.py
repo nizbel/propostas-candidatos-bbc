@@ -20,6 +20,7 @@ from presidenciaveis import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.propostas.ver_propostas, name='ver_propostas'),
+    url(r'^enviar-avaliacoes', views.propostas.enviar_avaliacoes, name='enviar_avaliacoes'),
     url(r'^listar-candidatos', views.propostas.listar_candidatos, name='listar_candidatos'),
     url(r'^listar-propostas', views.propostas.listar_propostas, name='listar_propostas')
 ]
