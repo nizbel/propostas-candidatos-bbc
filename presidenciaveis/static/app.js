@@ -212,7 +212,7 @@ presidenciaveisApp.controller('PresidenciaveisController', ['$scope', '$http', f
 				
 				for (var j = 0; j < $scope.propostas.length; j++) {
 					if (proposta == $scope.propostas[j].id) {
-						var selecaoAnterior = $scope.propostas[j];
+						var selecaoAnterior = $scope.propostas[j].selecionado;
 						if (concordancia == '-1') {
 							$scope.propostas[j].selecionado = 'contra';
 						} else if (concordancia == '0') {
@@ -247,7 +247,8 @@ presidenciaveisApp.controller('PresidenciaveisController', ['$scope', '$http', f
 		    labels: $scope.candidatosVisualizar,
 		    datasets: [{
 		        data: notas,
-		        label: 'Concordância'
+		        label: 'Concordância',
+		        backgroundColor: 'rgba(0,123,255, 0.2)'
 		    }]
 		};
 		

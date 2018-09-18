@@ -25,7 +25,7 @@ SECRET_KEY = 'v92k^8cu9fe32wp)spk5#zh2gowbkkvctu6gam+-4!oh(ls0qv'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['propostasbrasil2018.com.br']
 
 
 # Application definition
