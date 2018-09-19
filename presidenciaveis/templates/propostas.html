@@ -20,6 +20,76 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     
+    	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    	
+    	<style>
+		* {
+		    font-family: 'Roboto', sans-serif;
+		  }
+				  
+		/* Customize the label (the container) */
+		.container {
+		  display: block;
+		  position: relative;
+		  padding-left: 35px;
+		  margin-bottom: 12px;
+		  cursor: pointer;
+		  font-size: 22px;
+		  -webkit-user-select: none;
+		  -moz-user-select: none;
+		  -ms-user-select: none;
+		  user-select: none;
+		}
+		
+		/* Hide the browser's default radio button */
+		.container input {
+		  position: absolute;
+		  opacity: 0;
+		}
+		
+		/* Create a custom radio button */
+		.checkmark {
+		  position: absolute;
+		  top: 0;
+		  left: 0;
+		  height: 25px;
+		  width: 25px;
+		  background-color: #eee;
+		  border-radius: 50%;
+		}
+		
+		/* On mouse-over, add a grey background color */
+		.container:hover input ~ .checkmark {
+		  background-color: #ccc;
+		}
+		
+		/* When the radio button is checked, add a blue background */
+		.container input:checked ~ .checkmark {
+		  background-color: #2196F3;
+		}
+		
+		/* Create the indicator (the dot/circle - hidden when not checked) */
+		.checkmark:after {
+		  content: "";
+		  position: absolute;
+		  display: none;
+		}
+		
+		/* Show the indicator (dot/circle) when checked */
+		.container input:checked ~ .checkmark:after {
+		  display: block;
+		}
+		
+		/* Style the indicator (dot/circle) */
+		.container .checkmark:after {
+		  top: 9px;
+		  left: 9px;
+		  width: 8px;
+		  height: 8px;
+		  border-radius: 50%;
+		  background: white;
+		} 
+    	</style>
     	{% if not DEBUG %}
     	<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-7792152-6"></script>
@@ -35,76 +105,126 @@
     </head>
 
 	<body ng-controller="PresidenciaveisController" ng-init="init()">
+		{% csrf_token %}
 		{% verbatim %}
 		
-		<div class="row justify-content-center mt-3">
-			<h1>Bem-vindo ao Propostas para o Brasil 2018!</h1>
+		<div class="col-12">
+			<div class="row justify-content-center mt-3">
+				<h1>Bem-vindo ao Propostas para o Brasil 2018!</h1>
+			</div>
 		</div>
 		
-		<div class="row">
-			<div class="col-md-8 ml-3">
-				<div class="accordion" id="accordionExample">
-			  		<div class="card" ng-repeat="(key, value) in propostas | groupBy: 'area'">
-		        		<button class="btn btn-link collapsed card-header" id="heading-{{$index}}" type="button" data-toggle="collapse" 
-		        		 data-target="#collapse-{{$index}}" aria-expanded="false" aria-controls="collapse-{{$index}}" style="text-decoration: none;">
-					      		<h5 class="mb-0">
+		<div class="col-12">
+			<div class="row">
+				<div class="col-md-8 col-12">
+					<div class="accordion" id="accordionExample">
+				  		<div class="card" ng-repeat="(key, value) in propostas | groupBy: 'area'">
+			        		<button class="btn btn-link collapsed card-header" id="heading-{{$index}}" type="button" data-toggle="collapse" 
+			        		 data-target="#collapse-{{$index}}" aria-expanded="false" aria-controls="collapse-{{$index}}" 
+			        		 style="text-decoration: none;">
+					      		<p class="h6 mb-0">
 					          		{{key}}
-					      		</h5>
-		        		</button>
-				    	<div id="collapse-{{$index}}" class="collapse" aria-labelledby="heading-{{$index}}" data-parent="#accordionExample">
-				      		<div class="card-body" style="max-height: 400px; overflow: auto;">
-				      			<table class="table table-responsive">
-									<header>
-										<tr>
-											<th width="80%">Proposta</th>
-											<th style="text-align:center">Contra</th>
-											<th style="text-align:center">Neutro</th>
-											<th style="text-align:center">A favor</th>
-										</tr>
-									</header>
-				      				<body>
-										<tr ng-repeat="proposta in value">
-											<td><span ng-if="bloquear"><strong>{{proposta.nomeCandidato}}</strong> </span>{{proposta.texto}}</td>
-											<td align="center">
-												<input type="radio" ng-model="proposta.selecionado" ng-disabled="bloquear"
+					      		</p>
+			        		</button>
+					    	<div id="collapse-{{$index}}" class="collapse" aria-labelledby="heading-{{$index}}" data-parent="#accordionExample">
+					      		<div class="card-body" style="max-height: 400px; overflow: auto;">
+					      			<div class="row">
+						      			<div class="col-md-9 col-12" style="text-align: center;">
+						      				<h5>Propostas</h5>
+						      			</div>
+						      			<div class="col-md-1 col-4">
+						      				<h6>Contra</h6>
+						      			</div>
+						      			<div class="col-md-1 col-4">
+						      				<h6>Neutro</h6>
+						      			</div>
+						      			<div class="col-md-1 col-4">
+						      				<h6>A favor</h6>
+						      			</div>
+					      			</div>
+					      			
+					      			<div class="row pt-1 pb-1" ng-repeat="proposta in value" style="border-top: 1px solid #e9ecef;">
+						      			<div class="col-md-9 col-12" style="font-size: 16px;">
+						      				<span ng-if="bloquear"><strong>{{proposta.nomeCandidato}}</strong> </span><span>{{proposta.texto}}</span>
+						      			</div>
+					      				<div class="col-md-1 col-4">
+						      				<label class="container mt-1"> &nbsp;
+						      				<input type="radio" ng-model="proposta.selecionado" ng-disabled="bloquear"
 												 ng-change="alterarPosicionamento(proposta, '{{proposta.selecionado}}')" value="contra">
-											</td>
-											<td align="center">
-												<input type="radio" ng-model="proposta.selecionado" ng-disabled="bloquear"
+											 	<span class="checkmark"></span>
+											</label>
+						      			</div>
+						      			<div class="col-md-1 col-4">
+						      				<label class="container mt-1"> &nbsp;
+						      				<input type="radio" ng-model="proposta.selecionado" ng-disabled="bloquear"
 												 ng-change="alterarPosicionamento(proposta, '{{proposta.selecionado}}')" value="neutro">
-											</td>
-											<td align="center">
-												<input type="radio" ng-model="proposta.selecionado" ng-disabled="bloquear"
+											 	<span class="checkmark"></span>
+											</label>
+						      			</div>
+						      			<div class="col-md-1 col-4">
+						      				<label class="container mt-1"> &nbsp;
+						      				<input type="radio" ng-model="proposta.selecionado" ng-disabled="bloquear"
 												 ng-change="alterarPosicionamento(proposta, '{{proposta.selecionado}}')" value="favor">
-											</td>
-										</tr>
-									</body>
-								</table>
-							</div>
-				    	</div>
-			  		</div>
-				</div>	
-			
-				<div class="row justify-content-center mt-5">
-					<a type="button" class="btn btn-primary mr-3" data-toggle="modal" href="#exampleModal" role="button" 
-					 aria-expanded="false" aria-controls="exampleModal">
-				    	<i class="fas fa-info-circle"></i> Como funciona
-				  	</a>
-					<a type="button" class="btn btn-primary mr-3" target="_blank" download="propostas.csv" href="{{csv}}">
-						<i class="fas fa-file-download"></i> Baixar situação
-					</a>
-					<input id="file-upload" type="file" name="file" ng-disabled="bloquear"/>
-					<button type="button" class="btn btn-primary mr-3" ng-click="upload()" ng-disabled="bloquear">
-						<i class="fas fa-file-upload"></i> Carregar situação
-					</button>
-					<button type="button" class="btn btn-primary" ng-click="verCandidatos()" ng-disabled="bloquear">
-						<i class="fas fa-check"></i> Finalizar
-					</button>
+											 	<span class="checkmark"></span>
+											</label>
+						      			</div>
+					      			</div>
+					      			
+					      			
+					      			
+					      			<!-- <table class="table table-responsive">
+										<header>
+											<tr>
+												<th width="80%">Proposta</th>
+												<th style="text-align:center">Contra</th>
+												<th style="text-align:center">Neutro</th>
+												<th style="text-align:center">A favor</th>
+											</tr>
+										</header>
+					      				<body>
+											<tr ng-repeat="proposta in value">
+												<td><span ng-if="bloquear"><strong>{{proposta.nomeCandidato}}</strong> </span>{{proposta.texto}}</td>
+												<td align="center">
+													<input type="radio" ng-model="proposta.selecionado" ng-disabled="bloquear"
+													 ng-change="alterarPosicionamento(proposta, '{{proposta.selecionado}}')" value="contra">
+												</td>
+												<td align="center">
+													<input type="radio" ng-model="proposta.selecionado" ng-disabled="bloquear"
+													 ng-change="alterarPosicionamento(proposta, '{{proposta.selecionado}}')" value="neutro">
+												</td>
+												<td align="center">
+													<input type="radio" ng-model="proposta.selecionado" ng-disabled="bloquear"
+													 ng-change="alterarPosicionamento(proposta, '{{proposta.selecionado}}')" value="favor">
+												</td>
+											</tr>
+										</body>
+									</table> -->
+								</div>
+					    	</div>
+				  		</div>
+					</div>	
+				
+					<div class="row justify-content-center mt-5">
+						<a type="button" class="btn btn-primary mr-3 mt-1 col-6 col-md-2" data-toggle="modal" href="#exampleModal" role="button" 
+						 aria-expanded="false" aria-controls="exampleModal">
+					    	<i class="fas fa-info-circle"></i> Como funciona
+					  	</a>
+						<a type="button" class="btn btn-primary mr-3 mt-1 col-6 col-md-2" target="_blank" download="propostas.csv" href="{{csv}}">
+							<i class="fas fa-file-download"></i> Baixar situação
+						</a>
+						<input class="col-6 col-md-2 mr-5" id="file-upload" type="file" name="file" ng-disabled="bloquear"/>
+						<button type="button" class="btn btn-primary mr-3 mt-1 col-6 col-md-2" ng-click="upload()" ng-disabled="bloquear">
+							<i class="fas fa-file-upload"></i> Carregar situação
+						</button>
+						<button type="button" class="btn btn-primary mr-3 mt-1 col-6 col-md-2" ng-click="verCandidatos()" ng-disabled="bloquear">
+							<i class="fas fa-check"></i> Finalizar
+						</button>
+					</div>
 				</div>
-			</div>
-			
-			<div class="col-md-3 mr-3">
-				<canvas id="myChart" width="80%" height="80%"></canvas>
+				
+				<div class="col-md-3 mr-3">
+					<canvas id="myChart" width="80%" height="80%"></canvas>
+				</div>
 			</div>
 		</div>
 		
