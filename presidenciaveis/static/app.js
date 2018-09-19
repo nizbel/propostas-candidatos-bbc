@@ -9,6 +9,8 @@ presidenciaveisApp.config(['$compileProvider', function( $compileProvider )
 presidenciaveisApp.config(['$httpProvider', function($httpProvider) {
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+	var token = $('input[name=csrfmiddlewaretoken]').val();
+    $httpProvider.defaults.headers.post['X-CSRFToken'] = token;
 }]);
 
 presidenciaveisApp.controller('PresidenciaveisController', ['$scope', '$http', function($scope, $http) {
