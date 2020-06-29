@@ -6,6 +6,14 @@ from presidenciaveis.presidenciaveis.models.candidatos import Candidato,\
 
 admin.site.register(Candidato)
 
-admin.site.register(Concordancia)
+class ConcordanciaAdmin(admin.ModelAdmin):
+    search_fields = ['nome_candidato', 'texto_proposta', 'data_hora']
+    # TODO adicionar Tags
+    list_display = ('texto_proposta', 'nome_candidato', 'data_hora', 'nivel')
+    
+admin.site.register(Concordancia, ConcordanciaAdmin)
 
-admin.site.register(Proposta)
+class PropostaAdmin(admin.ModelAdmin):
+    list_display = ('texto', 'nome_candidato', 'resultado_positivo', 'resultado_negativo', 'resultado_neutro', 'qtd_concordancias')
+    
+admin.site.register(Proposta, PropostaAdmin)
